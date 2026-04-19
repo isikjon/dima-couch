@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Coachdim Landing + PHP Admin
 
-## Getting Started
+Лендинг сделан на Next.js (App Router), а админка работает на PHP и подходит для обычного shared hosting.
 
-First, run the development server:
+## Что уже реализовано
+
+- `/admin/` — вход по паролю (по умолчанию `admin123`)
+- Вкладки в админке: `Контент` и `SEO`
+- Визуальное inline-редактирование контента прямо на сайте
+- Редактирование ссылок через модальное окно (текст + URL)
+- Загрузка/замена фото в блоке `Обо мне` через модальное окно
+- SEO-форма (title, description, keywords, canonical, robots, OG, Twitter)
+- Сохранение в JSON-файлы на сервере (без БД)
+
+## Где хранятся данные
+
+- Контент: `public/cms/data/content.json`
+- SEO: `public/cms/data/seo.json`
+- Загруженные фото: `public/cms/uploads/`
+
+## Пароль админки
+
+По умолчанию: `admin123`.
+
+Для продакшена задайте переменную окружения на хостинге:
+
+- `CMS_ADMIN_PASSWORD=ваш_сложный_пароль`
+
+## Локальная разработка
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Открыть сайт: `http://localhost:3000`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Сборка для обычного хостинга
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Проект настроен на статический экспорт (`output: 'export'`).
 
-## Learn More
+```bash
+npm run build
+```
 
-To learn more about Next.js, take a look at the following resources:
+После сборки появится папка `out/`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Деплой на shared hosting (Apache/Nginx + PHP)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Загрузите содержимое `out/` в корень сайта.
+2. Обязательно загрузите PHP/CMS папки из проекта:
+   - `public/admin` -> `/admin`
+   - `public/cms` -> `/cms`
+3. Убедитесь, что на сервере включен PHP для `.php` файлов.
+4. Выдайте права на запись для:
+   - `/cms/data`
+   - `/cms/uploads`
 
-## Deploy on Vercel
+После этого:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `https://ваш-домен/admin/` — вход в админку
+- `https://ваш-домен/` — лендинг с сохранённым контентом
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Важно
+
+В `next dev` PHP-файлы не исполняются (это нормально). Полная работа админки проверяется на сервере с PHP.
+# dima-couch
