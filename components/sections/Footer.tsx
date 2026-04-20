@@ -19,7 +19,7 @@ export default function Footer() {
           {/* Brand */}
           <div className="space-y-4">
             <div className="font-display text-2xl font-semibold tracking-[0.12em] text-[#f0ece6] uppercase">
-              <EditableText id="footer.brand" defaultValue="Дима" />
+              <EditableText id="footer.brand" defaultValue="ДИМ" />
             </div>
             <EditableText
               id="footer.brand.subtitle"
@@ -101,7 +101,7 @@ export default function Footer() {
         <div className="pt-8 border-t border-white/[0.05] flex flex-col sm:flex-row items-center justify-between gap-4">
           <EditableText
             id="footer.bottom.left"
-            defaultValue="© 2026 Дима — Коуч. Все права защищены."
+            defaultValue="© 2026 Коуч ДИМ. Все права защищены."
             className="text-[#6b6560]/50 text-xs"
             tag="span"
           />

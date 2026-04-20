@@ -1,12 +1,12 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { ReactNode } from 'react'
+import { MouseEventHandler, ReactNode } from 'react'
 
 interface ButtonProps {
   children: ReactNode
   variant?: 'primary' | 'ghost'
-  onClick?: () => void
+  onClick?: MouseEventHandler<HTMLElement>
   href?: string
   className?: string
 }
@@ -24,14 +24,18 @@ export default function Button({ children, variant = 'primary', onClick, href, c
       className={`${styles[variant]} ${className}`}
       whileHover={{ scale: 1.03 }}
       whileTap={{ scale: 0.97 }}
-      onClick={onClick}
+      onClick={href ? undefined : (onClick as MouseEventHandler<HTMLSpanElement> | undefined)}
     >
       {children}
     </motion.span>
   )
 
   if (href) {
-    return <a href={href}>{content}</a>
+    return (
+      <a href={href} onClick={onClick as MouseEventHandler<HTMLAnchorElement> | undefined}>
+        {content}
+      </a>
+    )
   }
 
   return content

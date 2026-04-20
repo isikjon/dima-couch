@@ -31,19 +31,19 @@ type SeoPayload = {
 }
 
 const DEFAULT_SEO: SeoPayload = {
-  title: 'Дима — Коуч нового мышления',
+  title: 'Коуч ДИМ — Думай. Ищи. Меняй.',
   description:
     'Коучинг для тех, кто не ищет шаблонных ответов. Трансформация через честный разговор и нестандартное мышление.',
   keywords: 'коуч, коучинг, бизнес-коуч, личный коуч, трансформация, мышление',
   canonical: '',
   robots: 'index, follow',
-  ogTitle: 'Дима — Коуч нового мышления',
+  ogTitle: 'Коуч ДИМ — Думай. Ищи. Меняй.',
   ogDescription:
     'Коучинг для тех, кто не ищет шаблонных ответов. Трансформация через честный разговор и нестандартное мышление.',
   ogImage: '',
   ogType: 'website',
   twitterCard: 'summary_large_image',
-  twitterTitle: 'Дима — Коуч нового мышления',
+  twitterTitle: 'Коуч ДИМ — Думай. Ищи. Меняй.',
   twitterDescription:
     'Коучинг для тех, кто не ищет шаблонных ответов. Трансформация через честный разговор и нестандартное мышление.',
   twitterImage: '',
@@ -274,15 +274,28 @@ export function EditProvider({ children }: { children: ReactNode }) {
 
   const getLink = useCallback(
     (id: string, fallback: { href: string; label: string }) => {
-      const raw = store[`link:${id}`]
-      if (!raw) return fallback
+      const candidateKeys = [`link:${id}`]
 
-      try {
-        const parsed = JSON.parse(raw)
-        if (parsed && typeof parsed.href === 'string' && typeof parsed.label === 'string') {
-          return parsed
-        }
-      } catch {}
+      if (id.startsWith('nav.link.')) {
+        const suffix = id.replace('nav.link.', '')
+        candidateKeys.push(`link:nav.desktop.${suffix}`, `link:nav.mobile.${suffix}`)
+      }
+
+      if (id === 'nav.cta') {
+        candidateKeys.push('link:nav.desktop.cta', 'link:nav.mobile.cta')
+      }
+
+      for (const key of candidateKeys) {
+        const raw = store[key]
+        if (!raw) continue
+
+        try {
+          const parsed = JSON.parse(raw)
+          if (parsed && typeof parsed.href === 'string' && typeof parsed.label === 'string') {
+            return parsed
+          }
+        } catch {}
+      }
 
       return fallback
     },
@@ -292,6 +305,18 @@ export function EditProvider({ children }: { children: ReactNode }) {
   const setLink = useCallback(
     (id: string, value: { href: string; label: string }) => {
       const next = { ...storeRef.current, [`link:${id}`]: JSON.stringify(value) }
+
+      if (id.startsWith('nav.link.')) {
+        const suffix = id.replace('nav.link.', '')
+        delete next[`link:nav.desktop.${suffix}`]
+        delete next[`link:nav.mobile.${suffix}`]
+      }
+
+      if (id === 'nav.cta') {
+        delete next['link:nav.desktop.cta']
+        delete next['link:nav.mobile.cta']
+      }
+
       void persistContent(next)
     },
     [persistContent],

@@ -10,7 +10,7 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 }
 
 const CMS_ADMIN_FLAG = 'coachdim_admin_authenticated';
-const CMS_DEFAULT_PASSWORD = 'admin123';
+const CMS_DEFAULT_PASSWORD = 'WP28J6KVFQmezYd3';
 
 function cms_base_path(): string
 {

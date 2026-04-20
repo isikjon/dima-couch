@@ -290,7 +290,14 @@ export default function Hero() {
           ].map((stat, i) => (
             <div key={i} className="text-center">
               <div className="font-display text-2xl md:text-3xl text-[#c9a84c] font-light">
-                <Counter value={getContent(`hero.stat.${i}.value`, stat.value)} delay={stat.delay} />
+                {isEditing ? (
+                  <EditableText
+                    id={`hero.stat.${i}.value`}
+                    defaultValue={stat.value}
+                  />
+                ) : (
+                  <Counter value={getContent(`hero.stat.${i}.value`, stat.value)} delay={stat.delay} />
+                )}
               </div>
               <motion.div
                 initial={{ opacity: 0 }}

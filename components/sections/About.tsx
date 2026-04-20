@@ -74,7 +74,7 @@ export default function About() {
               <div>
                 <EditableText
                   id="about.title.line1"
-                  defaultValue="Дима — коуч,"
+                  defaultValue="Коуч ДИМ —"
                   className="font-display text-[clamp(28px,4vw,52px)] text-[#f0ece6] leading-tight mb-2"
                   tag="h2"
                 />

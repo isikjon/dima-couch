@@ -18,6 +18,30 @@ export default function Navbar() {
   const bgOpacity = useTransform(scrollY, [0, 80], [0, 1])
   const [mobileOpen, setMobileOpen] = useState(false)
 
+  const handleMobileNavigate = (href: string) => (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault()
+    setMobileOpen(false)
+
+    if (!href) return
+
+    if (href.startsWith('#')) {
+      const targetId = href.slice(1)
+
+      window.requestAnimationFrame(() => {
+        const target = document.getElementById(targetId)
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+          window.history.replaceState(null, '', href)
+        } else {
+          window.location.hash = href
+        }
+      })
+      return
+    }
+
+    window.location.href = href
+  }
+
   return (
     <motion.header
       className="fixed top-0 left-0 right-0 z-50 flex justify-center pointer-events-none"
@@ -35,7 +59,7 @@ export default function Navbar() {
         >
           {/* Logo */}
           <a href="#" className="font-display text-xl font-semibold tracking-[0.12em] text-[#f0ece6] uppercase cursor-pointer">
-            <EditableText id="nav.logo" defaultValue="Дима" />
+            <EditableText id="nav.logo" defaultValue="ДИМ" />
           </a>
 
           {/* Desktop nav */}
@@ -43,7 +67,7 @@ export default function Navbar() {
             {links.map((link, index) => (
               <EditableLink
                 key={link.href}
-                id={`nav.desktop.${index}`}
+                id={`nav.link.${index}`}
                 defaultHref={link.href}
                 defaultLabel={link.label}
               >
@@ -61,7 +85,7 @@ export default function Navbar() {
 
           {/* CTA */}
           <div className="hidden md:block">
-            <EditableLink id="nav.desktop.cta" defaultHref="#cta" defaultLabel="Начать">
+            <EditableLink id="nav.cta" defaultHref="#cta" defaultLabel="Начать">
               {(label, href) => (
                 <Button variant="primary" href={href} className="!py-2.5 !px-5 !text-xs !rounded-xl">
                   {label}
@@ -103,14 +127,14 @@ export default function Navbar() {
             {links.map((link, index) => (
               <EditableLink
                 key={link.href}
-                id={`nav.mobile.${index}`}
+                id={`nav.link.${index}`}
                 defaultHref={link.href}
                 defaultLabel={link.label}
               >
                 {(label, href) => (
                   <a
                     href={href}
-                    onClick={() => setMobileOpen(false)}
+                    onClick={handleMobileNavigate(href)}
                     className="px-4 py-3 text-sm text-[#6b6560] hover:text-[#f0ece6] hover:bg-white/[0.04] rounded-xl transition-all duration-200 cursor-pointer"
                   >
                     {label}
@@ -119,9 +143,14 @@ export default function Navbar() {
               </EditableLink>
             ))}
             <div className="pt-2 px-4">
-              <EditableLink id="nav.mobile.cta" defaultHref="#cta" defaultLabel="Начать">
+              <EditableLink id="nav.cta" defaultHref="#cta" defaultLabel="Начать">
                 {(label, href) => (
-                  <Button variant="primary" href={href} className="!w-full !justify-center !py-2.5 !text-xs !rounded-xl">
+                  <Button
+                    variant="primary"
+                    href={href}
+                    onClick={handleMobileNavigate(href)}
+                    className="!w-full !justify-center !py-2.5 !text-xs !rounded-xl"
+                  >
                     {label}
                   </Button>
                 )}
